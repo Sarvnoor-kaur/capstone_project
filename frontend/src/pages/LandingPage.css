@@ -168,6 +168,7 @@
   height: 100%;
   position: relative;
   z-index: 2;
+  min-height: 500px;
 }
 
 .orb-glow {
@@ -175,12 +176,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(220, 214, 247, 0.3) 0%, transparent 70%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(220, 214, 247, 0.4) 0%, rgba(244, 205, 187, 0.2) 40%, transparent 70%);
   border-radius: 50%;
   z-index: 1;
   animation: pulse 4s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes pulse {

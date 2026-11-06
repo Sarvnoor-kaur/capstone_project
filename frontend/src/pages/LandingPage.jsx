@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   FiHeart,
   FiArrowRight,
@@ -10,13 +11,13 @@ import {
   FiSun,
 } from "react-icons/fi";
 import Scene3D from "../components/3d/Scene3D";
-import WellnessOrb from "../components/3d/WellnessOrb";
-import FloatingParticles from "../components/3d/FloatingParticles";
+import MentalWellnessScene from "../components/3d/MentalWellnessScene";
 import "../styles/mentovya.css";
 import "./LandingPage.css";
 
 const LandingPage = () => {
   const { user } = useAuth();
+  const [show3D, setShow3D] = useState(true);
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -144,7 +145,7 @@ const LandingPage = () => {
               </motion.div>
             </motion.div>
 
-            {/* 3D Wellness Orb */}
+            {/* Mental Wellness 3D Visualization */}
             <motion.div
               className="hero-visual"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -152,10 +153,31 @@ const LandingPage = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               <div className="orb-container">
-                <Scene3D autoRotate={true}>
-                  <WellnessOrb />
-                  <FloatingParticles count={30} />
-                </Scene3D>
+                {show3D ? (
+                  <Scene3D>
+                    <MentalWellnessScene />
+                  </Scene3D>
+                ) : (
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '1rem'
+                  }}>
+                    <div style={{ fontSize: '6rem' }}>🧠💜</div>
+                    <p style={{
+                      color: 'var(--navy)',
+                      fontSize: '1.125rem',
+                      textAlign: 'center',
+                      maxWidth: '300px'
+                    }}>
+                      Your mental wellness journey starts here
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="orb-glow"></div>
             </motion.div>
