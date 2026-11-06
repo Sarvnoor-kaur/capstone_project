@@ -4,17 +4,12 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { motion } from "framer-motion";
 import axios from "../api/axiosClient";
 import {
-  FiMail,
-  FiLock,
   FiEye,
   FiEyeOff,
-  FiUser,
   FiHeart,
   FiShield,
   FiCheckCircle,
   FiArrowRight,
-  FiBookOpen,
-  FiCalendar,
 } from "react-icons/fi";
 import "../styles/mentovya.css";
 import "./AuthPages.css";
@@ -246,20 +241,17 @@ const RegisterPage = () => {
               <label htmlFor="name" className="form-label">
                 Full Name
               </label>
-              <div className="input-wrapper">
-                <FiUser className="input-icon" />
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="John Doe"
-                  required
-                  autoComplete="name"
-                />
-              </div>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="John Doe"
+                required
+                autoComplete="name"
+              />
             </motion.div>
 
             <motion.div
@@ -271,20 +263,17 @@ const RegisterPage = () => {
               <label htmlFor="email" className="form-label">
                 Email address
               </label>
-              <div className="input-wrapper">
-                <FiMail className="input-icon" />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="you@example.com"
-                  required
-                  autoComplete="email"
-                />
-              </div>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="you@example.com"
+                required
+                autoComplete="email"
+              />
             </motion.div>
 
             <motion.div
@@ -297,7 +286,6 @@ const RegisterPage = () => {
                 Password
               </label>
               <div className="input-wrapper">
-                <FiLock className="input-icon" />
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
@@ -346,19 +334,16 @@ const RegisterPage = () => {
               <label htmlFor="institution" className="form-label">
                 Institution <span className="label-optional">(Optional)</span>
               </label>
-              <div className="input-wrapper">
-                <FiBookOpen className="input-icon" />
-                <input
-                  type="text"
-                  id="institution"
-                  name="institution"
-                  value={formData.institution}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="Your university or college"
-                  autoComplete="organization"
-                />
-              </div>
+              <input
+                type="text"
+                id="institution"
+                name="institution"
+                value={formData.institution}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Your university or college"
+                autoComplete="organization"
+              />
             </motion.div>
 
             <div className="form-row">

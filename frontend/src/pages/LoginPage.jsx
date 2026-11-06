@@ -4,8 +4,6 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { motion } from "framer-motion";
 import axios from "../api/axiosClient";
 import {
-  FiMail,
-  FiLock,
   FiEye,
   FiEyeOff,
   FiHeart,
@@ -206,20 +204,17 @@ const LoginPage = () => {
               <label htmlFor="email" className="form-label">
                 Email address
               </label>
-              <div className="input-wrapper">
-                <FiMail className="input-icon" />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="you@example.com"
-                  required
-                  autoComplete="email"
-                />
-              </div>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="you@example.com"
+                required
+                autoComplete="email"
+              />
             </motion.div>
 
             <motion.div
@@ -232,7 +227,6 @@ const LoginPage = () => {
                 Password
               </label>
               <div className="input-wrapper">
-                <FiLock className="input-icon" />
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"

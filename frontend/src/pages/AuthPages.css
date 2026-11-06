@@ -270,18 +270,9 @@
   align-items: center;
 }
 
-.input-icon {
-  position: absolute;
-  left: 1rem;
-  color: var(--muted, #77788A);
-  font-size: 1.125rem;
-  pointer-events: none;
-  z-index: 2;
-}
-
 .form-input {
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 3rem;
+  padding: 0.875rem 1rem;
   font-size: 0.9375rem;
   color: var(--navy, #22243A);
   background: #FFFFFF;
@@ -289,6 +280,10 @@
   border-radius: 10px;
   transition: all 0.2s ease;
   font-family: 'Inter', sans-serif;
+}
+
+.input-wrapper .form-input {
+  padding-right: 3rem;
 }
 
 .form-input:focus {
@@ -567,6 +562,16 @@
   .form-input {
     font-size: 16px;
     /* Prevent zoom on iOS */
+    padding: 0.75rem 1rem;
+  }
+
+  .input-wrapper .form-input {
+    padding-right: 2.75rem;
+  }
+
+  .password-toggle {
+    right: 0.75rem;
+    font-size: 0.9375rem;
   }
 }
 
