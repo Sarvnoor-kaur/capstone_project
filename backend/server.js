@@ -8,6 +8,9 @@ import moodRoutes from "./routes/moodRoutes.js";
 import resourceRoutes from "./routes/resourceRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
 import aiChatRoutes from "./routes/aiChatRoutes.js";
+import studentProfileRoutes from "./routes/studentProfileRoutes.js";
+import consentRoutes from "./routes/consentRoutes.js";
+import privacyRoutes from "./routes/privacyRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -27,6 +30,9 @@ app.use("/api/mood", moodRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/ai-chat", aiChatRoutes);
+app.use("/api/students", studentProfileRoutes);
+app.use("/api/consents", consentRoutes);
+app.use("/api/privacy", privacyRoutes);
 
 
 if (process.env.NODE_ENV === "production") {

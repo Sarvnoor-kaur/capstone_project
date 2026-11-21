@@ -15,6 +15,9 @@ import ResourcesPage from "./pages/ResourcesPage";
 import SupportPage from "./pages/SupportPage";
 import CounselorDashboardPage from "./pages/CounselorDashboardPage";
 import AIChatPage from "./pages/AIChatPage";
+import StudentProfilePage from "./pages/StudentProfilePage";
+import ConsentManagementPage from "./pages/ConsentManagementPage";
+import PrivacySettingsPage from "./pages/PrivacySettingsPage";
 
 import DashboardLayout from "./components/DashboardLayout";
 
@@ -133,6 +136,30 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CounselorDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <StudentProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/consent"
+              element={
+                <ProtectedRoute>
+                  <ConsentManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/privacy"
+              element={
+                <ProtectedRoute>
+                  <PrivacySettingsPage />
                 </ProtectedRoute>
               }
             />
