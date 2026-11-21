@@ -18,6 +18,11 @@ import AIChatPage from "./pages/AIChatPage";
 import StudentProfilePage from "./pages/StudentProfilePage";
 import ConsentManagementPage from "./pages/ConsentManagementPage";
 import PrivacySettingsPage from "./pages/PrivacySettingsPage";
+import AssessmentsPage from "./pages/AssessmentsPage";
+import AssessmentInstructionsPage from "./pages/AssessmentInstructionsPage";
+import TakeAssessmentPage from "./pages/TakeAssessmentPage";
+import AssessmentResultPage from "./pages/AssessmentResultPage";
+import AssessmentHistoryPage from "./pages/AssessmentHistoryPage";
 
 import DashboardLayout from "./components/DashboardLayout";
 
@@ -160,6 +165,46 @@ function App() {
               element={
                 <ProtectedRoute>
                   <PrivacySettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments"
+              element={
+                <ProtectedRoute>
+                  <AssessmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/:assessmentId/instructions"
+              element={
+                <ProtectedRoute>
+                  <AssessmentInstructionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/:assessmentId/take"
+              element={
+                <ProtectedRoute>
+                  <TakeAssessmentPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/results/:resultId"
+              element={
+                <ProtectedRoute>
+                  <AssessmentResultPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/history"
+              element={
+                <ProtectedRoute>
+                  <AssessmentHistoryPage />
                 </ProtectedRoute>
               }
             />

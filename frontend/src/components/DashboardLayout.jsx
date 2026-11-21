@@ -15,6 +15,7 @@ import {
   FiUser,
   FiShield,
   FiLock,
+  FiClipboard,
 } from "react-icons/fi";
 
 const DashboardLayout = ({ children }) => {
@@ -32,6 +33,7 @@ const DashboardLayout = ({ children }) => {
   const studentMenuItems = [
     { path: "/dashboard", label: "Dashboard", icon: FiHome },
     { path: "/mood", label: "Mood Tracker", icon: FiActivity },
+    { path: "/assessments", label: "Assessments", icon: FiClipboard },
     { path: "/resources", label: "Resources", icon: FiBookOpen },
     { path: "/support", label: "Support", icon: FiMessageSquare },
     { path: "/ai-chat", label: "AI Chat", icon: FiMessageCircle },
