@@ -23,6 +23,8 @@ import AssessmentInstructionsPage from "./pages/AssessmentInstructionsPage";
 import TakeAssessmentPage from "./pages/TakeAssessmentPage";
 import AssessmentResultPage from "./pages/AssessmentResultPage";
 import AssessmentHistoryPage from "./pages/AssessmentHistoryPage";
+import BreathingExercisePage from "./pages/BreathingExercisePage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 import PremiumLayout from "./components/layout/PremiumLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -67,10 +69,9 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <Router>
-          <div className="app-container">
+    <AuthProvider>
+      <Router>
+        <div className="app-container">
           <Routes>
             {/* Public routes */}
             <Route
@@ -112,6 +113,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MoodPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/breathing"
+              element={
+                <ProtectedRoute>
+                  <BreathingExercisePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <AnalyticsPage />
                 </ProtectedRoute>
               }
             />
@@ -215,7 +232,6 @@ function App() {
         </div>
       </Router>
     </AuthProvider>
-  </ErrorBoundary>
   );
 }
 

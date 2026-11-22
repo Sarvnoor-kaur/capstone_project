@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 // Import Swiper styles
@@ -10,6 +11,7 @@ import "swiper/css/pagination";
 import "./WellnessCarousel.css";
 
 const WellnessCarousel = () => {
+  const navigate = useNavigate();
   const wellnessCategories = [
     {
       id: 1,
@@ -127,7 +129,16 @@ const WellnessCarousel = () => {
         >
           {wellnessCategories.map((category) => (
             <SwiperSlide key={category.id}>
-              <div className="wellness-card">
+              <div
+                className="wellness-card"
+                onClick={() => {
+                  if (category.title.toLowerCase().includes("breathing")) {
+                    navigate("/breathing");
+                  } else {
+                    navigate("/resources");
+                  }
+                }}
+              >
                 <div className="card-image-wrapper">
                   <img
                     src={category.image}

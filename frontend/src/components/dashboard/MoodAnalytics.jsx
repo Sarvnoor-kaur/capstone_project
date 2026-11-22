@@ -4,8 +4,13 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, BarChart, Bar,
 } from "recharts";
-import { TrendingUp, Calendar, Target, Zap } from "lucide-react";
+import {
+  TrendingUp, Calendar, Target, Zap, PieChart as PieIcon,
+  Activity, BarChart2,
+} from "lucide-react";
 import axios from "../../api/axiosClient";
+import MoodDistributionChart from "../MoodDistributionChart";
+import MoodRadarChart from "../MoodRadarChart";
 import "./MoodAnalytics.css";
 
 const DEFAULT_SAMPLE_DATA = [
@@ -17,6 +22,29 @@ const DEFAULT_SAMPLE_DATA = [
   { day: "Sat", score: 4.8, entries: 3 },
   { day: "Sun", score: 4.4, entries: 1 },
 ];
+
+const SAMPLE_RAW_ENTRIES = [
+  { mood: 4, date: new Date().toISOString() },
+  { mood: 5, date: new Date(Date.now() - 86400000).toISOString() },
+  { mood: 3, date: new Date(Date.now() - 86400000 * 2).toISOString() },
+  { mood: 4, date: new Date(Date.now() - 86400000 * 3).toISOString() },
+  { mood: 5, date: new Date(Date.now() - 86400000 * 4).toISOString() },
+  { mood: 4, date: new Date(Date.now() - 86400000 * 5).toISOString() },
+];
+
+const AnalyticsTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length && payload[0].value != null) {
+    return (
+      <div className="analytics-tooltip">
+        <p className="tooltip-day">{label}</p>
+        <p className="tooltip-score">
+          Score: <strong>{payload[0].value}/5</strong>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const parseMoodValue = (val) => {
   if (typeof val === "number") return val;
@@ -41,7 +69,7 @@ const parseMoodValue = (val) => {
 
 const MoodAnalytics = () => {
   const [moodData, setMoodData] = useState(DEFAULT_SAMPLE_DATA);
-  const [loading, setLoading] = useState(true);
+  const [rawEntries, setRawEntries] = useState(SAMPLE_RAW_ENTRIES);
   const [activeChart, setActiveChart] = useState("trend");
 
   useEffect(() => {
@@ -51,16 +79,19 @@ const MoodAnalytics = () => {
         const response = await axios.get("/mood");
         const moods = response.data || [];
         if (isMounted) {
-          processMoodData(moods);
+          if (Array.isArray(moods) && moods.length > 0) {
+            setRawEntries(moods);
+            processMoodData(moods);
+          } else {
+            setRawEntries(SAMPLE_RAW_ENTRIES);
+            setMoodData(DEFAULT_SAMPLE_DATA);
+          }
         }
       } catch (err) {
-        console.warn("Failed to fetch mood data, displaying sample data", err);
+        console.warn("Using sample mood analytics:", err);
         if (isMounted) {
+          setRawEntries(SAMPLE_RAW_ENTRIES);
           setMoodData(DEFAULT_SAMPLE_DATA);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
         }
       }
     };
@@ -84,10 +115,11 @@ const MoodAnalytics = () => {
       const dateStr = date.toISOString().split("T")[0];
 
       const dayMoods = moods.filter((m) => {
-        const mDate = new Date(m.createdAt || m.date)
-          .toISOString()
-          .split("T")[0];
-        return mDate === dateStr;
+        const rawDate = m.createdAt || m.date;
+        if (!rawDate) return false;
+        const parsedDate = new Date(rawDate);
+        if (isNaN(parsedDate.getTime())) return false;
+        return parsedDate.toISOString().split("T")[0] === dateStr;
       });
 
       const avgScore =
@@ -100,7 +132,7 @@ const MoodAnalytics = () => {
 
       last7Days.push({
         day: dayStr,
-        score: avgScore ? parseFloat(avgScore.toFixed(1)) : 3.5,
+        score: avgScore ? parseFloat(avgScore.toFixed(1)) : 3.8,
         entries: dayMoods.length || 1,
       });
     }
@@ -141,43 +173,23 @@ const MoodAnalytics = () => {
 
   const stats = getWeeklyStats();
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length && payload[0].value != null) {
-      return (
-        <div className="analytics-tooltip">
-          <p className="tooltip-day">{label}</p>
-          <p className="tooltip-score">
-            Score: <strong>{payload[0].value}/5</strong>
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
-    <section className="mood-analytics-section">
-      <motion.div
-        className="analytics-header"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div>
-          <h2 className="analytics-title">Weekly Mood Insights</h2>
+    <section id="mood-analytics-section" className="mood-analytics-section" data-section="mood-analytics-section">
+      <div className="analytics-header">
+        <div className="analytics-header-content">
+          <div className="analytics-badge">
+            <Activity size={16} />
+            <span>Real-time Analytics</span>
+          </div>
+          <h2 className="analytics-title">Weekly Mood Analytics & Progress</h2>
           <p className="analytics-subtitle">
-            Track your emotional patterns and progress
+            Visual trends, emotional balance, and comprehensive weekly tracking
           </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Stats Cards */}
-      <motion.div
-        className="analytics-stats-row"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
+      <div className="analytics-stats-row">
         <div className="analytics-stat-card">
           <div className="stat-card-icon lavender">
             <TrendingUp size={20} />
@@ -223,119 +235,144 @@ const MoodAnalytics = () => {
             </p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Chart Tabs */}
-      <motion.div
-        className="chart-tabs"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
+      <div className="chart-tabs">
         <button
           className={`chart-tab ${activeChart === "trend" ? "active" : ""}`}
           onClick={() => setActiveChart("trend")}
         >
-          Mood Trend
+          <TrendingUp size={16} />
+          <span>Mood Journey</span>
         </button>
         <button
           className={`chart-tab ${activeChart === "bar" ? "active" : ""}`}
           onClick={() => setActiveChart("bar")}
         >
-          Daily Entries
+          <BarChart2 size={16} />
+          <span>Daily Frequency</span>
         </button>
-      </motion.div>
+        <button
+          className={`chart-tab ${activeChart === "breakdown" ? "active" : ""}`}
+          onClick={() => setActiveChart("breakdown")}
+        >
+          <PieIcon size={16} />
+          <span>Emotional Balance & Breakdown</span>
+        </button>
+      </div>
 
-      {/* Chart Area */}
-      <motion.div
-        className="chart-container"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        {activeChart === "trend" ? (
-          <ResponsiveContainer width="100%" height={320} minWidth={100} minHeight={200}>
-            <AreaChart
-              data={moodData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#A99BEA" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#A99BEA" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="rgba(220, 214, 247, 0.3)"
-              />
-              <XAxis
-                dataKey="day"
-                stroke="#9CA3AF"
-                fontSize={13}
-                fontWeight={500}
-                tickLine={false}
-              />
-              <YAxis
-                domain={[0, 5]}
-                stroke="#9CA3AF"
-                fontSize={13}
-                tickLine={false}
-                axisLine={false}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Area
-                type="monotone"
-                dataKey="score"
-                stroke="#A99BEA"
-                strokeWidth={3}
-                fillOpacity={1}
-                fill="url(#moodGradient)"
-                connectNulls
-                dot={{
-                  fill: "#A99BEA",
-                  strokeWidth: 2,
-                  stroke: "white",
-                  r: 5,
-                }}
-                activeDot={{
-                  r: 7,
-                  fill: "#8B7FD9",
-                  stroke: "white",
-                  strokeWidth: 3,
-                }}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        ) : (
-          <ResponsiveContainer width="100%" height={320} minWidth={100} minHeight={200}>
-            <BarChart
-              data={moodData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="rgba(220, 214, 247, 0.3)"
-              />
-              <XAxis
-                dataKey="day"
-                stroke="#9CA3AF"
-                fontSize={13}
-                fontWeight={500}
-                tickLine={false}
-              />
-              <YAxis
-                stroke="#9CA3AF"
-                fontSize={13}
-                tickLine={false}
-                axisLine={false}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="entries" fill="#DCD6F7" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+      {/* Chart Canvas Area */}
+      <div className="chart-container">
+        {activeChart === "trend" && (
+          <div className="chart-canvas-wrapper" style={{ width: "100%", height: "340px", minWidth: 0 }}>
+            <ResponsiveContainer width="100%" height={340} minWidth={0} minHeight={260} initialDimension={{ width: 600, height: 340 }}>
+              <AreaChart
+                data={moodData}
+                margin={{ top: 20, right: 30, left: -10, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#A99BEA" stopOpacity={0.45} />
+                    <stop offset="95%" stopColor="#A99BEA" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(220, 214, 247, 0.5)"
+                />
+                <XAxis
+                  dataKey="day"
+                  stroke="#6B7280"
+                  fontSize={13}
+                  fontWeight={600}
+                  tickLine={false}
+                />
+                <YAxis
+                  domain={[0, 5]}
+                  ticks={[1, 2, 3, 4, 5]}
+                  stroke="#6B7280"
+                  fontSize={13}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip content={<AnalyticsTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#8B7FD9"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#moodGradient)"
+                  connectNulls
+                  dot={{
+                    fill: "#A99BEA",
+                    strokeWidth: 2,
+                    stroke: "white",
+                    r: 6,
+                  }}
+                  activeDot={{
+                    r: 8,
+                    fill: "#6B58CD",
+                    stroke: "white",
+                    strokeWidth: 3,
+                  }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         )}
-      </motion.div>
+
+        {activeChart === "bar" && (
+          <div className="chart-canvas-wrapper" style={{ width: "100%", height: "340px", minWidth: 0 }}>
+            <ResponsiveContainer width="100%" height={340} minWidth={0} minHeight={260} initialDimension={{ width: 600, height: 340 }}>
+              <BarChart
+                data={moodData}
+                margin={{ top: 20, right: 30, left: -10, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(220, 214, 247, 0.5)"
+                />
+                <XAxis
+                  dataKey="day"
+                  stroke="#6B7280"
+                  fontSize={13}
+                  fontWeight={600}
+                  tickLine={false}
+                />
+                <YAxis
+                  stroke="#6B7280"
+                  fontSize={13}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip content={<AnalyticsTooltip />} />
+                <Bar dataKey="entries" fill="#A99BEA" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+
+        {activeChart === "breakdown" && (
+          <div className="breakdown-grid-wrapper">
+            <div className="breakdown-card">
+              <h4 className="breakdown-card-title">Mood Distribution</h4>
+              <p className="breakdown-card-subtitle">Overall emotional frequency</p>
+              <div style={{ width: "100%", height: "320px", minWidth: 0 }}>
+                <MoodDistributionChart entries={rawEntries} />
+              </div>
+            </div>
+            <div className="breakdown-card">
+              <h4 className="breakdown-card-title">360° Mood Balance Radar</h4>
+              <p className="breakdown-card-subtitle">Harmony across states</p>
+              <div style={{ width: "100%", height: "320px", minWidth: 0 }}>
+                <MoodRadarChart entries={rawEntries} />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 };

@@ -124,6 +124,13 @@ const WellnessActivities = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.08 }}
               whileHover={{ y: -6 }}
+              onClick={() => {
+                if (activity.title.toLowerCase().includes("breathing")) {
+                  navigate("/breathing");
+                } else {
+                  navigate("/resources");
+                }
+              }}
             >
               <div className="activity-image-section">
                 <img

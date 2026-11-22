@@ -14,6 +14,8 @@ import {
   ChevronRight,
   Sparkles,
   Users,
+  Wind,
+  BarChart2,
 } from "lucide-react";
 import "./PremiumSidebar.css";
 
@@ -21,17 +23,14 @@ const PremiumSidebar = ({ isOpen, toggleSidebar, userRole = "student" }) => {
   const location = useLocation();
 
   const studentMenuItems = [
-    { path: "/dashboard", label: "Home", icon: Home, badge: null },
-    { path: "/mood", label: "Mood Tracker", icon: Activity, badge: null },
-    {
-      path: "/assessments",
-      label: "Assessments",
-      icon: ClipboardList,
-      badge: null,
-    },
-    { path: "/ai-chat", label: "AI Companion", icon: Sparkles, badge: "New" },
-    { path: "/resources", label: "Resources", icon: BookOpen, badge: null },
-    { path: "/support", label: "Support", icon: MessageSquare, badge: null },
+    { path: "/dashboard",  label: "Home",           icon: Home,          badge: null   },
+    { path: "/mood",       label: "Mood Tracker",   icon: Activity,      badge: null   },
+    { path: "/analytics",  label: "Analytics",      icon: BarChart2,     badge: "New"  },
+    { path: "/breathing",  label: "Breathing",      icon: Wind,          badge: "Calm" },
+    { path: "/assessments",label: "Assessments",    icon: ClipboardList, badge: null   },
+    { path: "/ai-chat",    label: "AI Companion",   icon: Sparkles,      badge: "New"  },
+    { path: "/resources",  label: "Resources",      icon: BookOpen,      badge: null   },
+    { path: "/support",    label: "Support",        icon: MessageSquare, badge: null   },
   ];
 
   const counselorMenuItems = [
