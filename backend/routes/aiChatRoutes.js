@@ -1,9 +1,9 @@
 import express from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { protect } from "../middleware/authMiddleware.js";
+import { aiServiceClient } from "../services/aiServiceClient.js";
 
 const router = express.Router();
-
 
 const SYSTEM_PROMPT = `You are a compassionate mental health support AI assistant for students in higher education. Your role is to provide:
 
@@ -24,53 +24,81 @@ IMPORTANT RESTRICTIONS:
 
 Remember: You're a supportive companion, not a replacement for professional therapy or emergency services.`;
 
+/**
+ * Generates an empathetic fallback message when Gemini API is unavailable.
+ */
+function getFallbackReply(safetyAssessment) {
+  if (safetyAssessment?.riskDetected) {
+    return (
+      "I hear how difficult things are for you right now, and I want you to know you don't have to carry this alone. " +
+      "Please connect with someone who can support you today. Campus counselors and crisis helplines are free, confidential, and available 24/7."
+    );
+  }
+  return (
+    "Thank you for reaching out. I'm here to listen and support your emotional wellbeing. " +
+    "Whether you're dealing with academic stress, feeling down, or just need to reflect, please feel free to share what's on your mind."
+  );
+}
+
+/**
+ * Main AI chat endpoint.
+ * Evaluates student message via NOPE Edge on Python AI server,
+ * then generates empathetic guidance while attaching structured safety assessment.
+ */
 router.post("/", protect, async (req, res) => {
   try {
     const { message, conversationHistory = [] } = req.body;
 
-    if (!message || message.trim() === "") {
+    if (!message || typeof message !== "string" || message.trim() === "") {
       return res.status(400).json({ message: "Message is required" });
     }
 
-    if (!process.env.GEMINI_API_KEY) {
-      console.error("GEMINI_API_KEY not configured");
-      return res.status(500).json({
-        message: "AI service configuration error.",
-      });
+    const trimmedMessage = message.trim();
+
+    // 1. Evaluate safety risk signals via Python AI service (NOPE Edge)
+    const safetyAssessment = await aiServiceClient.analyzeRisk(trimmedMessage);
+
+    // 2. Generate conversational reply
+    let aiReply = "";
+
+    if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "your_gemini_api_key_here") {
+      try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        let conversationContext = SYSTEM_PROMPT + "\n\n";
+        const recentHistory = Array.isArray(conversationHistory)
+          ? conversationHistory.slice(-10)
+          : [];
+
+        recentHistory.forEach((msg) => {
+          conversationContext += `${msg.role === "user" ? "User" : "Assistant"}: ${
+            msg.content
+          }\n`;
+        });
+
+        conversationContext += `User: ${trimmedMessage}\nAssistant:`;
+
+        const result = await model.generateContent(conversationContext);
+        const response = await result.response;
+        aiReply = response.text();
+      } catch (geminiError) {
+        console.warn("Gemini generation failed, falling back to supportive template:", geminiError.message);
+        aiReply = getFallbackReply(safetyAssessment);
+      }
+    } else {
+      // Graceful fallback when Gemini key is not configured
+      aiReply = getFallbackReply(safetyAssessment);
     }
 
-    
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-    
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-    
-    let conversationContext = SYSTEM_PROMPT + "\n\n";
-
-    
-    const recentHistory = conversationHistory.slice(-10);
-    recentHistory.forEach((msg) => {
-      conversationContext += `${msg.role === "user" ? "User" : "Assistant"}: ${
-        msg.content
-      }\n`;
-    });
-
-    conversationContext += `User: ${message}\nAssistant:`;
-
-    
-    const result = await model.generateContent(conversationContext);
-    const response = await result.response;
-    const aiReply = response.text();
-
-    res.json({
+    return res.json({
       reply: aiReply,
       timestamp: new Date().toISOString(),
+      safetyAssessment,
     });
   } catch (error) {
-    console.error("AI Chat Error Details:", error);
+    console.error("AI Chat route unexpected error:", error.message);
 
-    
     if (error.status === 429) {
       return res.status(429).json({
         message: "The AI is currently busy. Please try again in a minute.",
@@ -78,16 +106,32 @@ router.post("/", protect, async (req, res) => {
       });
     }
 
-    if (error.message?.includes("API key")) {
-      return res.status(500).json({
-        message: "Configuration Error: Invalid API key.",
-      });
-    }
-
-    res.status(500).json({
-      message: "Failed to get AI response. Please try again.",
+    return res.status(500).json({
+      message: "Failed to process chat message. Please try again.",
       error: error.message,
     });
+  }
+});
+
+/**
+ * Dedicated endpoint for evaluating message safety risk without generating full chat reply.
+ */
+router.post("/safety-check", protect, async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message || typeof message !== "string" || message.trim() === "") {
+      return res.status(400).json({ message: "Message is required" });
+    }
+
+    const safetyAssessment = await aiServiceClient.analyzeRisk(message.trim());
+    return res.json({
+      safetyAssessment,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error("Safety-check error:", err.message);
+    return res.status(500).json({ message: "Safety analysis failed" });
   }
 });
 

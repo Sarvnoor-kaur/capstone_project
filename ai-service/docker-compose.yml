@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  ai-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mental-health-ai-service
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=development
+      - DEBUG=true
+      - APP_NAME=ai-service
+      - APP_VERSION=0.1.0
+      - HOST=0.0.0.0
+      - PORT=8000
+      - POSTGRES_SERVER=postgres-vector
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=mental_health_ai
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - INTERNAL_API_KEY=dev-internal-secret-key-change-in-production
+    depends_on:
+      postgres-vector:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres-vector:
+    image: pgvector/pgvector:pg16
+    container_name: mental-health-pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mental_health_ai
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pgvector_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mental_health_ai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgvector_data:
