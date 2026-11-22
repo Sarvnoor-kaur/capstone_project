@@ -17,6 +17,7 @@ import {
   Users,
   Wind,
   BarChart2,
+  BookHeart,
 } from "lucide-react";
 import "./PremiumSidebar.css";
 
@@ -25,6 +26,7 @@ const PremiumSidebar = ({ isOpen, toggleSidebar, userRole = "student" }) => {
 
   const studentMenuItems = [
     { path: "/dashboard",  label: "Home",           icon: Home,          badge: null   },
+    { path: "/journal",    label: "Private Journal",icon: BookHeart,     badge: "Private" },
     { path: "/mood",       label: "Mood Tracker",   icon: Activity,      badge: null   },
     { path: "/analytics",  label: "Analytics",      icon: BarChart2,     badge: "New"  },
     { path: "/breathing",  label: "Breathing",      icon: Wind,          badge: "Calm" },

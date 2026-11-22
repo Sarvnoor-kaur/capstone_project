@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Sparkles, ArrowRight, Wind, Brain, Heart, Sun,
-  TrendingUp, Smile, Calendar,
+  TrendingUp, Smile, Calendar, BookHeart,
 } from "lucide-react";
 import "./WelcomeHero.css";
 
@@ -36,10 +36,10 @@ const WelcomeHero = ({ userName = "Friend" }) => {
 
   /* quick-action buttons */
   const quickActions = [
+    { label: "Journal",    icon: BookHeart, route: "/journal",    color: "mint"     },
     { label: "Check In",   icon: Smile,  route: "/mood",       color: "lavender" },
-    { label: "Breathe",    icon: Wind,   route: "/breathing",  color: "mint"     },
-    { label: "AI Chat",    icon: Brain,  route: "/ai-chat",    color: "peach"    },
-    { label: "Analytics",  icon: TrendingUp, route: "/analytics", color: "purple" },
+    { label: "Breathe",    icon: Wind,   route: "/breathing",  color: "peach"    },
+    { label: "AI Chat",    icon: Brain,  route: "/ai-chat",    color: "purple"   },
   ];
 
   /* floating stat pills */

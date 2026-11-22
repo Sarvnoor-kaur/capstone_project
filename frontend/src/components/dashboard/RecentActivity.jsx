@@ -74,7 +74,7 @@ const RecentActivity = () => {
     const fetchRecentMoods = async () => {
       try {
         const response = await axios.get("/mood");
-        const moods = (response.data || []).slice(0, 5);
+        const moods = (Array.isArray(response?.data) ? response.data : []).slice(0, 5);
         if (isMounted) {
           if (moods.length > 0) {
             setRecentMoods(moods);

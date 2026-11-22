@@ -19,6 +19,7 @@ import {
   Image,
   BookOpen,
   Bell,
+  BookHeart,
 } from "lucide-react";
 import "../styles/premium-base.css";
 import "./DashboardPage.css";
@@ -50,6 +51,7 @@ const DashboardPage = () => {
   };
 
   const quickJumpTabs = [
+    { label: "Private Journal", icon: BookHeart, route: "/journal" },
     { label: "Mood Analytics", icon: TrendingUp, targetId: "mood-analytics-section" },
     { label: "Breathing Exercise", icon: Wind, route: "/breathing" },
     { label: "AI Companion", icon: Sparkles, targetId: "ai-companion-section" },

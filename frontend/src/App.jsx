@@ -25,6 +25,7 @@ import AssessmentResultPage from "./pages/AssessmentResultPage";
 import AssessmentHistoryPage from "./pages/AssessmentHistoryPage";
 import BreathingExercisePage from "./pages/BreathingExercisePage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import JournalPage from "./pages/JournalPage";
 
 import PremiumLayout from "./components/layout/PremiumLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -129,6 +130,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/journal"
+              element={
+                <ProtectedRoute>
+                  <JournalPage />
                 </ProtectedRoute>
               }
             />

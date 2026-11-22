@@ -78,11 +78,11 @@ const AssessmentInstructionsPage = () => {
           <div style={{ display: "flex", gap: "2rem", marginBottom: "2rem", flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <FiClipboard style={{ color: "var(--lavender-dark)" }} />
-              <span className="body-md text-muted">{assessment.questions.length} questions</span>
+              <span className="body-md text-muted">{assessment?.questions?.length || 0} questions</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <FiClock style={{ color: "var(--lavender-dark)" }} />
-              <span className="body-md text-muted">~{Math.ceil(assessment.questions.length / 2)} minutes</span>
+              <span className="body-md text-muted">~{Math.ceil((assessment?.questions?.length || 0) / 2)} minutes</span>
             </div>
           </div>
 
