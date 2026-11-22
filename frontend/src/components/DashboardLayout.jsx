@@ -13,6 +13,9 @@ import {
   FiX,
   FiSettings,
   FiUser,
+  FiShield,
+  FiLock,
+  FiClipboard,
 } from "react-icons/fi";
 
 const DashboardLayout = ({ children }) => {
@@ -30,9 +33,13 @@ const DashboardLayout = ({ children }) => {
   const studentMenuItems = [
     { path: "/dashboard", label: "Dashboard", icon: FiHome },
     { path: "/mood", label: "Mood Tracker", icon: FiActivity },
+    { path: "/assessments", label: "Assessments", icon: FiClipboard },
     { path: "/resources", label: "Resources", icon: FiBookOpen },
     { path: "/support", label: "Support", icon: FiMessageSquare },
     { path: "/ai-chat", label: "AI Chat", icon: FiMessageCircle },
+    { path: "/profile", label: "My Profile", icon: FiUser },
+    { path: "/consent", label: "Consent", icon: FiShield },
+    { path: "/privacy", label: "Privacy", icon: FiLock },
   ];
 
   const counselorMenuItems = [
@@ -48,9 +55,8 @@ const DashboardLayout = ({ children }) => {
     <div className="dashboard-layout">
       {/* Sidebar */}
       <aside
-        className={`sidebar ${sidebarOpen ? "open" : "collapsed"} ${
-          mobileMenuOpen ? "mobile-open" : ""
-        }`}
+        className={`sidebar ${sidebarOpen ? "open" : "collapsed"} ${mobileMenuOpen ? "mobile-open" : ""
+          }`}
       >
         <div className="sidebar-header">
           <div className="logo-container">
@@ -74,9 +80,8 @@ const DashboardLayout = ({ children }) => {
                 <li key={item.path}>
                   <Link
                     to={item.path}
-                    className={`nav-item ${
-                      isActive(item.path) ? "active" : ""
-                    }`}
+                    className={`nav-item ${isActive(item.path) ? "active" : ""
+                      }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Icon className="nav-icon" />
@@ -119,9 +124,8 @@ const DashboardLayout = ({ children }) => {
 
       {/* Main content */}
       <div
-        className={`main-wrapper ${
-          sidebarOpen ? "sidebar-open" : "sidebar-collapsed"
-        }`}
+        className={`main-wrapper ${sidebarOpen ? "sidebar-open" : "sidebar-collapsed"
+          }`}
       >
         {/* Top bar */}
         <header className="top-bar">

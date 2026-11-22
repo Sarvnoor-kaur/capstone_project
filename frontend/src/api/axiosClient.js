@@ -9,7 +9,6 @@ const axiosClient = axios.create({
   },
 });
 
-
 axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -23,16 +22,15 @@ axiosClient.interceptors.request.use(
   }
 );
 
-
 axiosClient.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     if (error.response?.status === 401) {
-      
+      // Do not force a hard window.location.href reload to avoid sudden page flashing or disappearance
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      console.warn("401 Unauthorized received for request:", error.config?.url);
     }
     return Promise.reject(error);
   }

@@ -1,0 +1,56 @@
+/* Premium Layout Styles */
+
+.premium-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--premium-cream);
+  width: 100%;
+}
+
+.premium-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left var(--transition-base);
+  min-height: 100vh;
+  min-width: 0;        /* KEY: allows flex child to shrink below content width */
+  width: 0;            /* KEY: together with flex:1 this prevents overflow */
+}
+
+.premium-main.sidebar-open {
+  margin-left: 280px;
+}
+
+.premium-main.sidebar-closed {
+  margin-left: 80px;
+}
+
+.premium-content {
+  flex: 1;
+  padding: var(--spacing-2xl);
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .premium-main.sidebar-open,
+  .premium-main.sidebar-closed {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .premium-content {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .premium-content {
+    padding: var(--spacing-md);
+  }
+}

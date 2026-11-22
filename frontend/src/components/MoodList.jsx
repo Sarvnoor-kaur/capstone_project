@@ -1,10 +1,8 @@
 import {
-  FiFrown,
-  FiMeh,
-  FiSmile,
   FiMessageCircle,
   FiTrendingUp,
 } from "react-icons/fi";
+import "./MoodList.css";
 
 const MoodList = ({ entries, showAll = false }) => {
   if (!entries || entries.length === 0) {
@@ -31,13 +29,13 @@ const MoodList = ({ entries, showAll = false }) => {
 
   const getMoodData = (mood) => {
     const moodMap = {
-      1: { icon: FiFrown, label: "Very Sad", color: "#ff6b6b" },
-      2: { icon: FiFrown, label: "Sad", color: "#ffa502" },
-      3: { icon: FiMeh, label: "Okay", color: "#4facfe" },
-      4: { icon: FiSmile, label: "Good", color: "#43e97b" },
-      5: { icon: FiSmile, label: "Great", color: "#f093fb" },
+      1: { emoji: "😢", label: "Very Sad", color: "#FF6B9D", bgColor: "#FFE5F0" },
+      2: { emoji: "😔", label: "Sad", color: "#FFA502", bgColor: "#FFF4E5" },
+      3: { emoji: "😐", label: "Okay", color: "#4FACFE", bgColor: "#E3F2FD" },
+      4: { emoji: "😊", label: "Good", color: "#43E97B", bgColor: "#E8F5E9" },
+      5: { emoji: "😄", label: "Great", color: "#A99BEA", bgColor: "#F3F0FF" },
     };
-    return moodMap[mood] || { icon: FiMeh, label: "Unknown", color: "#gray" };
+    return moodMap[mood] || { emoji: "😐", label: "Unknown", color: "#9CA3AF", bgColor: "#F3F4F6" };
   };
 
   const formatDate = (dateString) => {
@@ -58,41 +56,41 @@ const MoodList = ({ entries, showAll = false }) => {
   };
 
   return (
-    <div className="mood-list">
+    <div className="mood-list-modern">
       {displayEntries.map((entry) => {
         const moodData = getMoodData(entry.mood);
-        const MoodIcon = moodData.icon;
         return (
-          <div key={entry._id} className="mood-entry">
-            <div className="mood-header">
-              <span
-                className={`mood-badge mood-${entry.mood}`}
-                style={{
-                  backgroundColor: moodData.color + "20",
-                  color: moodData.color,
-                  border: `2px solid ${moodData.color}`,
-                }}
-              >
-                <MoodIcon style={{ fontSize: "1.2rem" }} />
-                {moodData.label}
-              </span>
-              <span className="mood-date">{formatDate(entry.date)}</span>
+          <div
+            key={entry._id}
+            className="mood-entry-card"
+            style={{
+              '--mood-color': moodData.color,
+              '--mood-bg': moodData.bgColor,
+            }}
+          >
+            <div className="mood-entry-header">
+              <div className="mood-badge-modern">
+                <span className="mood-emoji-display">{moodData.emoji}</span>
+                <span className="mood-label-display">{moodData.label}</span>
+              </div>
+              <span className="mood-date-display">{formatDate(entry.date)}</span>
             </div>
             {entry.note && (
-              <p className="mood-note">
-                <FiMessageCircle style={{ marginRight: "0.5rem" }} />
-                {entry.note}
-              </p>
+              <div className="mood-note-modern">
+                <FiMessageCircle className="note-icon" />
+                <p>{entry.note}</p>
+              </div>
             )}
           </div>
         );
       })}
       {!showAll && entries.length > 5 && (
-        <p className="more-entries">
-          <FiTrendingUp style={{ marginRight: "0.25rem" }} />
-          {entries.length - 5} more{" "}
-          {entries.length - 5 === 1 ? "entry" : "entries"} available
-        </p>
+        <div className="more-entries-modern">
+          <FiTrendingUp />
+          <span>
+            {entries.length - 5} more {entries.length - 5 === 1 ? "entry" : "entries"} available
+          </span>
+        </div>
       )}
     </div>
   );

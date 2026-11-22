@@ -1,0 +1,268 @@
+/* Wellness Carousel Styles */
+
+.wellness-carousel-section {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.carousel-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+}
+
+.carousel-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--premium-navy);
+  margin: 0 0 0.5rem 0;
+}
+
+.carousel-subtitle {
+  font-size: 1.0625rem;
+  color: var(--premium-gray);
+  margin: 0;
+  font-weight: 500;
+}
+
+.view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--premium-white);
+  color: var(--premium-navy);
+  border: 1px solid rgba(220, 214, 247, 0.5);
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.view-all-btn:hover {
+  background: var(--premium-lavender-light);
+  border-color: var(--premium-lavender);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Swiper Customization */
+.wellness-swiper {
+  padding-bottom: 3rem;
+}
+
+.wellness-swiper .swiper-button-next,
+.wellness-swiper .swiper-button-prev {
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-medium);
+  transition: all var(--transition-base);
+}
+
+.wellness-swiper .swiper-button-next:hover,
+.wellness-swiper .swiper-button-prev:hover {
+  background: var(--premium-lavender-light);
+  transform: scale(1.1);
+}
+
+.wellness-swiper .swiper-button-next::after,
+.wellness-swiper .swiper-button-prev::after {
+  font-size: 20px;
+  color: var(--premium-navy);
+  font-weight: 900;
+}
+
+.wellness-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: var(--premium-gray-light);
+  opacity: 1;
+  transition: all var(--transition-base);
+}
+
+.wellness-swiper .swiper-pagination-bullet-active {
+  width: 32px;
+  border-radius: 5px;
+  background: var(--premium-purple);
+}
+
+/* Wellness Card */
+.wellness-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(220, 214, 247, 0.3);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.wellness-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-large);
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.wellness-card:hover .card-image {
+  transform: scale(1.1);
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.85;
+  transition: opacity var(--transition-base);
+}
+
+.wellness-card:hover .card-overlay {
+  opacity: 0.7;
+}
+
+.card-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.card-content {
+  padding: var(--spacing-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--premium-navy);
+  margin: 0 0 0.5rem 0;
+}
+
+.card-description {
+  font-size: 0.9375rem;
+  color: var(--premium-gray);
+  margin: 0 0 var(--spacing-md) 0;
+  flex: 1;
+}
+
+.card-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--premium-lavender-light);
+  color: var(--premium-navy);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  width: fit-content;
+}
+
+.card-action:hover {
+  background: var(--premium-lavender);
+  transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .carousel-title {
+    font-size: 1.75rem;
+  }
+
+  .card-image-wrapper {
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .view-all-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .carousel-title {
+    font-size: 1.5rem;
+  }
+
+  .carousel-subtitle {
+    font-size: 1rem;
+  }
+
+  .card-image-wrapper {
+    height: 180px;
+  }
+
+  .wellness-swiper .swiper-button-next,
+  .wellness-swiper .swiper-button-prev {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .wellness-carousel-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .carousel-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .carousel-title {
+    font-size: 1.375rem;
+  }
+
+  .card-content {
+    padding: var(--spacing-md);
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+}

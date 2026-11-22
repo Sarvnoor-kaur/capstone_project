@@ -1,0 +1,152 @@
+/* Modern Colorful Mood List */
+
+.mood-list-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mood-entry-card {
+  background: var(--mood-bg);
+  border: 2px solid var(--mood-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mood-entry-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.mood-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mood-badge-modern {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1.25rem;
+  background: white;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mood-emoji-display {
+  font-size: 1.75rem;
+  line-height: 1;
+  animation: gentle-bounce 2s ease-in-out infinite;
+}
+
+@keyframes gentle-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.mood-label-display {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.mood-date-display {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--navy-light);
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius-full);
+}
+
+.mood-note-modern {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+}
+
+.note-icon {
+  font-size: 1.25rem;
+  color: var(--mood-color);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.mood-note-modern p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--navy);
+}
+
+.more-entries-modern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #DCD6F7 0%, #F4CDBB 100%);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  color: var(--navy);
+  margin-top: 0.5rem;
+}
+
+.more-entries-modern svg {
+  font-size: 1.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mood-entry-card {
+    padding: 1.25rem;
+  }
+
+  .mood-entry-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mood-badge-modern {
+    padding: 0.5rem 1rem;
+  }
+
+  .mood-emoji-display {
+    font-size: 1.5rem;
+  }
+
+  .mood-label-display {
+    font-size: 0.9375rem;
+  }
+
+  .mood-note-modern {
+    padding: 0.875rem 1rem;
+  }
+}

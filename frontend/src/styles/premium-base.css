@@ -1,0 +1,348 @@
+/* Premium Wellness Dashboard - Base Styles */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Premium Color Palette */
+  --premium-lavender: #DCD6F7;
+  --premium-lavender-light: #EBE7FA;
+  --premium-lavender-dark: #ADA3DC;
+  --premium-purple: #A99BEA;
+  --premium-purple-dark: #8B7FD9;
+
+  --premium-cream: #F8F7F3;
+  --premium-cream-light: #FFF9F0;
+  --premium-white: #FFFFFF;
+
+  --premium-peach: #F4CDBB;
+  --premium-peach-light: #FFE5D9;
+
+  --premium-mint: #B8E6D5;
+  --premium-mint-light: #D4F1E8;
+
+  --premium-navy: #202338;
+  --premium-navy-light: #3A3F5C;
+  --premium-gray: #6B7280;
+  --premium-gray-light: #9CA3AF;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #DCD6F7 0%, #F4CDBB 100%);
+  --gradient-calm: linear-gradient(135deg, #B8E6D5 0%, #DCD6F7 100%);
+  --gradient-warm: linear-gradient(135deg, #FFE5D9 0%, #FFF9F0 100%);
+  --gradient-purple: linear-gradient(135deg, #A99BEA 0%, #DCD6F7 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(248, 247, 243, 0.95) 100%);
+
+  /* Shadows */
+  --shadow-soft: 0 4px 24px rgba(32, 35, 56, 0.06);
+  --shadow-medium: 0 8px 32px rgba(32, 35, 56, 0.08);
+  --shadow-large: 0 16px 48px rgba(32, 35, 56, 0.12);
+  --shadow-xl: 0 24px 64px rgba(32, 35, 56, 0.16);
+
+  /* Border Radius */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Typography */
+  --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Typography */
+body {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--premium-navy);
+  background-color: var(--premium-cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--premium-navy);
+}
+
+.display {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.body-large {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.body-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Glass Morphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-4px);
+}
+
+/* Premium Cards */
+.premium-card {
+  background: var(--premium-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-base);
+  overflow: hidden;
+  position: relative;
+}
+
+.premium-card:hover {
+  box-shadow: var(--shadow-large);
+  transform: translateY(-8px);
+}
+
+.premium-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.premium-card:hover .premium-card-image {
+  transform: scale(1.05);
+}
+
+/* Buttons */
+.btn-premium {
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--premium-navy);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.btn-purple {
+  background: var(--gradient-purple);
+  color: white;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-purple:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--premium-lavender);
+  color: var(--premium-navy);
+}
+
+.btn-outline:hover {
+  background: var(--premium-lavender-light);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.6s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .display {
+    font-size: 2.5rem;
+  }
+
+  .h1 {
+    font-size: 2rem;
+  }
+
+  .h2 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .display {
+    font-size: 2rem;
+  }
+
+  .h1 {
+    font-size: 1.75rem;
+  }
+
+  .h2 {
+    font-size: 1.5rem;
+  }
+
+  .premium-card {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--premium-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--premium-lavender);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--premium-lavender-dark);
+}
+
+/* Selection */
+::selection {
+  background: var(--premium-lavender);
+  color: var(--premium-navy);
+}

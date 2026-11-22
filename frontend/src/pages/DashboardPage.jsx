@@ -1,366 +1,154 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "../api/axiosClient";
-import { motion } from "framer-motion";
+import WelcomeHero from "../components/dashboard/WelcomeHero";
+import DailyMoodCheck from "../components/dashboard/DailyMoodCheck";
+import AICompanionPromo from "../components/dashboard/AICompanionPromo";
+import WellnessCarousel from "../components/dashboard/WellnessCarousel";
+import WellnessGallery from "../components/dashboard/WellnessGallery";
+import MoodAnalytics from "../components/dashboard/MoodAnalytics";
+import WellnessActivities from "../components/dashboard/WellnessActivities";
+import WellnessResources from "../components/dashboard/WellnessResources";
+import RecentActivity from "../components/dashboard/RecentActivity";
 import {
-  FiActivity,
-  FiTrendingUp,
-  FiAward,
-  FiEdit3,
-  FiBarChart2,
-  FiCalendar,
-  FiBookOpen,
-  FiMessageCircle,
-  FiSun,
-  FiMoon,
-  FiCoffee,
-  FiHeart,
-  FiWind,
-  FiArrowRight
-} from "react-icons/fi";
-import MoodForm from "../components/MoodForm";
-import MoodTrendChart from "../components/MoodTrendChart";
-import MoodHeatmap from "../components/MoodHeatmap";
-import AchievementBadges from "../components/AchievementBadges";
-import MoodStats from "../components/MoodStats";
-import "../styles/mentovya.css";
+  TrendingUp,
+  Wind,
+  Sparkles,
+  Compass,
+  Image,
+  BookOpen,
+  Bell,
+  BookHeart,
+} from "lucide-react";
+import "../styles/premium-base.css";
 import "./DashboardPage.css";
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const [allMoods, setAllMoods] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview");
+  const navigate = useNavigate();
+  const [moodRefreshKey, setMoodRefreshKey] = useState(0);
 
-  // Get time of day greeting
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return { text: "Good morning", icon: <FiSun /> };
-    if (hour < 18) return { text: "Good afternoon", icon: <FiCoffee /> };
-    return { text: "Good evening", icon: <FiMoon /> };
-  };
-
-  const greeting = getGreeting();
-
-  useEffect(() => {
-    const fetchMoods = async () => {
-      try {
-        const response = await axios.get("/mood");
-        setAllMoods(response.data);
-      } catch (err) {
-        console.error("Failed to fetch mood entries", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user) {
-      fetchMoods();
-    }
-  }, [user]);
-
-  const refreshMoods = async () => {
+  const handleMoodSubmit = async (mood) => {
     try {
-      const response = await axios.get("/mood");
-      setAllMoods(response.data);
+      // Backend Mongoose schema requires `mood` to be a Number (1 to 5)
+      await axios.post("/mood", {
+        mood: Number(mood.value) || 3,
+        note: `Checked in feeling ${mood.label}`,
+      });
+      // Trigger refresh for analytics & recent activities
+      setMoodRefreshKey((prev) => prev + 1);
     } catch (err) {
-      console.error("Failed to refresh mood entries", err);
+      console.error("Failed to submit mood", err);
     }
   };
 
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 },
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
+
+  const quickJumpTabs = [
+    { label: "Private Journal", icon: BookHeart, route: "/journal" },
+    { label: "Mood Analytics", icon: TrendingUp, targetId: "mood-analytics-section" },
+    { label: "Breathing Exercise", icon: Wind, route: "/breathing" },
+    { label: "AI Companion", icon: Sparkles, targetId: "ai-companion-section" },
+    { label: "Recommended Activities", icon: Compass, targetId: "activities-section" },
+    { label: "Inspiration Gallery", icon: Image, targetId: "gallery-section" },
+    { label: "Wellness Resources", icon: BookOpen, targetId: "resources-section" },
+    { label: "Recent & Reminders", icon: Bell, targetId: "recent-activity-section" },
+  ];
 
   return (
-    <div className="dashboard-page">
-      {/* Welcome Header */}
-      <motion.div className="dashboard-header" {...fadeIn}>
-        <div className="greeting-section">
-          <div className="greeting-icon">{greeting.icon}</div>
-          <div>
-            <h1 className="heading-xl">
-              {greeting.text}, {user?.name}
-            </h1>
-            <p className="body-md text-muted">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-            </p>
-          </div>
-        </div>
-      </motion.div>
+    <div className="premium-dashboard">
+      {/* 1. Large Welcome Hero Section with Lifestyle Photography */}
+      <WelcomeHero userName={user?.name || "Friend"} />
 
-      {/* Daily Check-in Prompt */}
-      <motion.div
-        className="checkin-prompt glass-card-lg"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <div className="checkin-content">
-          <div className="checkin-text">
-            <h3 className="heading-md">How are you feeling today?</h3>
-            <p className="body-md text-muted">Take a moment to check in with yourself</p>
-          </div>
+      {/* Quick Jump Section Pills */}
+      <nav className="dashboard-quick-nav" aria-label="Dashboard quick navigation">
+        <div className="quick-nav-track">
+          {quickJumpTabs.map((tab, idx) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={idx}
+                className="quick-nav-pill"
+                onClick={() => {
+                  if (tab.route) {
+                    navigate(tab.route);
+                  } else if (tab.targetId) {
+                    scrollToSection(tab.targetId);
+                  }
+                }}
+              >
+                <Icon size={16} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* 2. Interactive Daily Mood Check-in */}
+      <div id="mood-checkin-section">
+        <DailyMoodCheck onMoodSubmit={handleMoodSubmit} />
+      </div>
+
+      {/* 3. PROMINENT: Weekly Mood Analytics & Progress Charts (Moved right after Check-in!) */}
+      <div id="mood-analytics-section">
+        <MoodAnalytics key={`analytics-${moodRefreshKey}`} />
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "1.25rem", marginBottom: "1.5rem" }}>
           <button
-            className="btn btn-primary"
-            onClick={() => setActiveTab("track")}
+            onClick={() => navigate("/analytics")}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.85rem 2rem",
+              background: "linear-gradient(135deg, #A99BEA 0%, #8B7FD9 100%)",
+              color: "white", border: "none", borderRadius: "9999px",
+              fontFamily: "var(--font-primary)", fontSize: "0.9375rem", fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 6px 20px rgba(169,155,234,0.4)",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(169,155,234,0.5)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 6px 20px rgba(169,155,234,0.4)"; }}
           >
-            <FiEdit3 /> Check In
+            <TrendingUp size={18} />
+            View Full Analytics Dashboard →
           </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Quick Actions Grid */}
-      <motion.div
-        className="quick-actions-grid"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <Link to="/ai-chat" className="action-card glass-card lavender">
-          <div className="action-icon">
-            <FiMessageCircle size={28} />
-          </div>
-          <div className="action-content">
-            <h4 className="heading-sm">AI Companion</h4>
-            <p className="body-sm text-muted">Talk it out. We're listening.</p>
-          </div>
-          <div className="action-arrow">
-            <FiArrowRight />
-          </div>
-        </Link>
+      {/* 4. AI Companion Promotional Section with 3D Illustration & CTA */}
+      <div id="ai-companion-section">
+        <AICompanionPromo />
+      </div>
 
-        <Link to="/resources" className="action-card glass-card sage">
-          <div className="action-icon">
-            <FiBookOpen size={28} />
-          </div>
-          <div className="action-content">
-            <h4 className="heading-sm">Wellness Library</h4>
-            <p className="body-sm text-muted">Curated resources for you</p>
-          </div>
-          <div className="action-arrow">
-            <FiArrowRight />
-          </div>
-        </Link>
+      {/* 5. Personalized Wellness Activity Recommendations */}
+      <div id="activities-section">
+        <WellnessActivities />
+      </div>
 
-        <div className="action-card glass-card peach" style={{ cursor: 'pointer' }}>
-          <div className="action-icon">
-            <FiWind size={28} />
-          </div>
-          <div className="action-content">
-            <h4 className="heading-sm">Breathing Exercise</h4>
-            <p className="body-sm text-muted">Find calm in 3 minutes</p>
-          </div>
-          <div className="action-arrow">
-            <FiArrowRight />
-          </div>
-        </div>
+      {/* 6. Explore Wellness Horizontal Swiper Carousel */}
+      <div id="explore-carousel-section">
+        <WellnessCarousel />
+      </div>
 
-        <Link to="/support" className="action-card glass-card navy">
-          <div className="action-icon">
-            <FiHeart size={28} />
-          </div>
-          <div className="action-content">
-            <h4 className="heading-sm">Get Support</h4>
-            <p className="body-sm text-muted">We're here to help</p>
-          </div>
-          <div className="action-arrow">
-            <FiArrowRight />
-          </div>
-        </Link>
-      </motion.div>
+      {/* 7. Masonry-style Wellness Image Gallery with Interactive Lightbox */}
+      <div id="gallery-section">
+        <WellnessGallery />
+      </div>
 
-      {/* Wellness Overview Stats */}
-      {!loading && allMoods.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <MoodStats entries={allMoods} />
-        </motion.div>
-      )}
+      {/* 8. Educational Wellness Resources Section */}
+      <div id="resources-section">
+        <WellnessResources />
+      </div>
 
-      {/* Tabs */}
-      <motion.div
-        className="dashboard-tabs"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        <button
-          className={`tab-btn ${activeTab === "overview" ? "active" : ""}`}
-          onClick={() => setActiveTab("overview")}
-        >
-          <FiBarChart2 /> Overview
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "analytics" ? "active" : ""}`}
-          onClick={() => setActiveTab("analytics")}
-        >
-          <FiTrendingUp /> Analytics
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "achievements" ? "active" : ""}`}
-          onClick={() => setActiveTab("achievements")}
-        >
-          <FiAward /> Achievements
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "track" ? "active" : ""}`}
-          onClick={() => setActiveTab("track")}
-        >
-          <FiEdit3 /> Track Mood
-        </button>
-      </motion.div>
-
-      {/* Tab Content */}
-      <div className="tab-content">
-        {activeTab === "overview" && (
-          <motion.div
-            className="overview-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="glass-card-lg">
-              <div className="card-header-section">
-                <div>
-                  <h3 className="heading-md">
-                    <FiTrendingUp /> 30-Day Mood Trend
-                  </h3>
-                  <p className="body-sm text-muted">
-                    Your mood patterns over the last month
-                  </p>
-                </div>
-              </div>
-              {loading ? (
-                <div className="loading-spinner"></div>
-              ) : allMoods.length > 0 ? (
-                <MoodTrendChart entries={allMoods} />
-              ) : (
-                <div className="empty-state">
-                  <FiActivity size={48} className="empty-icon" />
-                  <p className="body-md text-muted">No mood data yet. Start tracking to see your trends!</p>
-                </div>
-              )}
-            </div>
-
-            {/* Daily Inspiration */}
-            <div className="inspiration-card glass-card-lg">
-              <div className="inspiration-icon">
-                <FiSun />
-              </div>
-              <blockquote className="inspiration-quote">
-                "Taking care of yourself is a form of self-respect. You deserve the time and energy you invest in your wellbeing."
-              </blockquote>
-            </div>
-          </motion.div>
-        )}
-
-        {activeTab === "analytics" && (
-          <motion.div
-            className="analytics-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="glass-card-lg">
-              <div className="card-header-section">
-                <div>
-                  <h3 className="heading-md">
-                    <FiCalendar /> Mood Heatmap
-                  </h3>
-                  <p className="body-sm text-muted">12-week mood calendar view</p>
-                </div>
-              </div>
-              {loading ? (
-                <div className="loading-spinner"></div>
-              ) : allMoods.length > 0 ? (
-                <MoodHeatmap entries={allMoods} />
-              ) : (
-                <div className="empty-state">
-                  <FiCalendar size={48} className="empty-icon" />
-                  <p className="body-md text-muted">Start tracking to see your mood calendar</p>
-                </div>
-              )}
-            </div>
-
-            <div className="glass-card-lg">
-              <div className="card-header-section">
-                <div>
-                  <h3 className="heading-md">
-                    <FiBarChart2 /> Detailed Trends
-                  </h3>
-                  <p className="body-sm text-muted">Track your emotional journey</p>
-                </div>
-              </div>
-              {loading ? (
-                <div className="loading-spinner"></div>
-              ) : allMoods.length > 0 ? (
-                <MoodTrendChart entries={allMoods} />
-              ) : (
-                <div className="empty-state">
-                  <FiActivity size={48} className="empty-icon" />
-                  <p className="body-md text-muted">No mood data available</p>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {activeTab === "achievements" && (
-          <motion.div
-            className="achievements-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="glass-card-lg">
-              <div className="card-header-section">
-                <div>
-                  <h3 className="heading-md">
-                    <FiAward /> Your Achievements
-                  </h3>
-                  <p className="body-sm text-muted">
-                    Earn badges by tracking your mood consistently
-                  </p>
-                </div>
-              </div>
-              {loading ? (
-                <div className="loading-spinner"></div>
-              ) : (
-                <AchievementBadges entries={allMoods} />
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {activeTab === "track" && (
-          <motion.div
-            className="track-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="glass-card-lg">
-              <div className="card-header-section">
-                <div>
-                  <h3 className="heading-md">
-                    <FiEdit3 /> How are you feeling today?
-                  </h3>
-                  <p className="body-sm text-muted">
-                    Take a moment to check in with yourself
-                  </p>
-                </div>
-              </div>
-              <MoodForm onMoodSubmit={refreshMoods} />
-            </div>
-          </motion.div>
-        )}
+      {/* 9. Recent Activity Timeline & Upcoming Wellness Reminders */}
+      <div id="recent-activity-section">
+        <RecentActivity key={`activity-${moodRefreshKey}`} />
       </div>
     </div>
   );

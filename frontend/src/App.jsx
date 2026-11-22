@@ -15,10 +15,23 @@ import ResourcesPage from "./pages/ResourcesPage";
 import SupportPage from "./pages/SupportPage";
 import CounselorDashboardPage from "./pages/CounselorDashboardPage";
 import AIChatPage from "./pages/AIChatPage";
+import StudentProfilePage from "./pages/StudentProfilePage";
+import ConsentManagementPage from "./pages/ConsentManagementPage";
+import PrivacySettingsPage from "./pages/PrivacySettingsPage";
+import AssessmentsPage from "./pages/AssessmentsPage";
+import AssessmentInstructionsPage from "./pages/AssessmentInstructionsPage";
+import TakeAssessmentPage from "./pages/TakeAssessmentPage";
+import AssessmentResultPage from "./pages/AssessmentResultPage";
+import AssessmentHistoryPage from "./pages/AssessmentHistoryPage";
+import BreathingExercisePage from "./pages/BreathingExercisePage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import JournalPage from "./pages/JournalPage";
 
-import DashboardLayout from "./components/DashboardLayout";
+import PremiumLayout from "./components/layout/PremiumLayout";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import "./App.css";
+import "./styles/premium-base.css";
 import "./styles/mentovya.css";
 
 // Protected route wrapper
@@ -37,7 +50,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return <PremiumLayout>{children}</PremiumLayout>;
 };
 
 // Public route wrapper (redirects to dashboard if logged in)
@@ -87,7 +100,7 @@ function App() {
               }
             />
 
-            {/* Protected routes with dashboard layout */}
+            {/* Protected routes with premium wellness layout */}
             <Route
               path="/dashboard"
               element={
@@ -101,6 +114,30 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MoodPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/breathing"
+              element={
+                <ProtectedRoute>
+                  <BreathingExercisePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <AnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/journal"
+              element={
+                <ProtectedRoute>
+                  <JournalPage />
                 </ProtectedRoute>
               }
             />
@@ -133,6 +170,70 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CounselorDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <StudentProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/consent"
+              element={
+                <ProtectedRoute>
+                  <ConsentManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/privacy"
+              element={
+                <ProtectedRoute>
+                  <PrivacySettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments"
+              element={
+                <ProtectedRoute>
+                  <AssessmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/:assessmentId/instructions"
+              element={
+                <ProtectedRoute>
+                  <AssessmentInstructionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/:assessmentId/take"
+              element={
+                <ProtectedRoute>
+                  <TakeAssessmentPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/results/:resultId"
+              element={
+                <ProtectedRoute>
+                  <AssessmentResultPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments/history"
+              element={
+                <ProtectedRoute>
+                  <AssessmentHistoryPage />
                 </ProtectedRoute>
               }
             />
