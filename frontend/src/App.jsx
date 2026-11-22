@@ -24,9 +24,11 @@ import TakeAssessmentPage from "./pages/TakeAssessmentPage";
 import AssessmentResultPage from "./pages/AssessmentResultPage";
 import AssessmentHistoryPage from "./pages/AssessmentHistoryPage";
 
-import DashboardLayout from "./components/DashboardLayout";
+import PremiumLayout from "./components/layout/PremiumLayout";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import "./App.css";
+import "./styles/premium-base.css";
 import "./styles/mentovya.css";
 
 // Protected route wrapper
@@ -45,7 +47,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return <PremiumLayout>{children}</PremiumLayout>;
 };
 
 // Public route wrapper (redirects to dashboard if logged in)
@@ -65,9 +67,10 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="app-container">
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <div className="app-container">
           <Routes>
             {/* Public routes */}
             <Route
@@ -95,7 +98,7 @@ function App() {
               }
             />
 
-            {/* Protected routes with dashboard layout */}
+            {/* Protected routes with premium wellness layout */}
             <Route
               path="/dashboard"
               element={
@@ -212,6 +215,7 @@ function App() {
         </div>
       </Router>
     </AuthProvider>
+  </ErrorBoundary>
   );
 }
 

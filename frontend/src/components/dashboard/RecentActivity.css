@@ -1,0 +1,231 @@
+/* Recent Activity Styles */
+
+.recent-activity-section {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.activity-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.activity-column {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(220, 214, 247, 0.3);
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid rgba(220, 214, 247, 0.3);
+}
+
+.column-header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--premium-lavender-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--premium-navy);
+  flex-shrink: 0;
+}
+
+.column-header-icon.reminder {
+  background: var(--premium-peach-light);
+}
+
+.column-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--premium-navy);
+  margin: 0;
+}
+
+/* Activity List */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: 1rem;
+  background: var(--premium-cream);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.activity-item:hover {
+  background: var(--premium-lavender-light);
+}
+
+.activity-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-soft);
+}
+
+.activity-emoji {
+  font-size: 1.25rem;
+}
+
+.activity-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-item-title {
+  font-size: 0.875rem;
+  color: var(--premium-navy);
+  margin: 0 0 0.125rem 0;
+  text-transform: capitalize;
+}
+
+.activity-item-note {
+  font-size: 0.75rem;
+  color: var(--premium-gray);
+  margin: 0 0 0.25rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activity-item-time {
+  font-size: 0.6875rem;
+  color: var(--premium-gray-light);
+  font-weight: 500;
+}
+
+.activity-check {
+  color: var(--premium-mint);
+  flex-shrink: 0;
+}
+
+/* Reminder List */
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: 1rem;
+  background: var(--premium-cream);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.reminder-item:hover {
+  background: var(--premium-lavender-light);
+}
+
+.reminder-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--premium-navy);
+}
+
+.reminder-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.reminder-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--premium-navy);
+  margin: 0 0 0.25rem 0;
+}
+
+.reminder-description {
+  font-size: 0.8125rem;
+  color: var(--premium-gray);
+  margin: 0;
+}
+
+.reminder-time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--premium-purple);
+  flex-shrink: 0;
+  padding: 0.25rem 0.75rem;
+  background: var(--premium-lavender-light);
+  border-radius: var(--radius-full);
+}
+
+/* Loading & Empty */
+.activity-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.activity-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--premium-lavender-light);
+  border-top-color: var(--premium-purple);
+  border-radius: 50%;
+  animation: activitySpin 0.8s linear infinite;
+}
+
+@keyframes activitySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.activity-empty {
+  text-align: center;
+  padding: 2rem;
+}
+
+.activity-empty p {
+  font-size: 0.9375rem;
+  color: var(--premium-gray);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .activity-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-column {
+    padding: 1.25rem;
+  }
+
+  .column-title {
+    font-size: 1.125rem;
+  }
+}
