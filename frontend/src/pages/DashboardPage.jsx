@@ -24,6 +24,14 @@ import MoodTrendChart from "../components/MoodTrendChart";
 import MoodHeatmap from "../components/MoodHeatmap";
 import AchievementBadges from "../components/AchievementBadges";
 import MoodStats from "../components/MoodStats";
+import MoodDistributionChart from "../components/MoodDistributionChart";
+import WeeklyComparisonChart from "../components/WeeklyComparisonChart";
+import TimeOfDayChart from "../components/TimeOfDayChart";
+import MonthlySummaryChart from "../components/MonthlySummaryChart";
+import MoodFrequencyChart from "../components/MoodFrequencyChart";
+import MoodRadarChart from "../components/MoodRadarChart";
+import MoodGaugeChart from "../components/MoodGaugeChart";
+import MoodScatterChart from "../components/MoodScatterChart";
 import "../styles/mentovya.css";
 import "./DashboardPage.css";
 
@@ -263,39 +271,74 @@ const DashboardPage = () => {
 
         {activeTab === "analytics" && (
           <motion.div
-            className="analytics-content"
+            className="analytics-content enhanced-modern"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="glass-card-lg">
-              <div className="card-header-section">
-                <div>
-                  <h3 className="heading-md">
-                    <FiCalendar /> Mood Heatmap
-                  </h3>
-                  <p className="body-sm text-muted">12-week mood calendar view</p>
-                </div>
-              </div>
-              {loading ? (
-                <div className="loading-spinner"></div>
-              ) : allMoods.length > 0 ? (
-                <MoodHeatmap entries={allMoods} />
-              ) : (
-                <div className="empty-state">
-                  <FiCalendar size={48} className="empty-icon" />
-                  <p className="body-md text-muted">Start tracking to see your mood calendar</p>
-                </div>
-              )}
+            {/* Hero Stats Cards */}
+            <div className="analytics-hero-stats">
+              <MoodStats entries={allMoods} />
             </div>
 
-            <div className="glass-card-lg">
-              <div className="card-header-section">
+            {/* Two Column Layout - Top Section */}
+            <div className="analytics-grid-2">
+              {/* Mood Distribution - Donut Chart */}
+              <div className="glass-card-modern gradient-border-1">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper lavender">
+                    <FiActivity />
+                  </div>
+                  <div>
+                    <h3 className="heading-md">Mood Distribution</h3>
+                    <p className="body-sm text-muted">Your emotional breakdown</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <MoodDistributionChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern">
+                    <div className="empty-icon">📊</div>
+                    <p>Start tracking to see distribution</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Radar Chart - Mood Balance */}
+              <div className="glass-card-modern gradient-border-2">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper sage">
+                    <FiTrendingUp />
+                  </div>
+                  <div>
+                    <h3 className="heading-md">Mood Balance Radar</h3>
+                    <p className="body-sm text-muted">360° emotional view</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <MoodRadarChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern">
+                    <div className="empty-icon">🎯</div>
+                    <p>Track moods for radar analysis</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Full Width - Area Chart */}
+            <div className="glass-card-modern gradient-border-3">
+              <div className="card-modern-header">
+                <div className="header-icon-wrapper peach">
+                  <FiActivity />
+                </div>
                 <div>
-                  <h3 className="heading-md">
-                    <FiBarChart2 /> Detailed Trends
-                  </h3>
-                  <p className="body-sm text-muted">Track your emotional journey</p>
+                  <h3 className="heading-md">30-Day Mood Journey</h3>
+                  <p className="body-sm text-muted">Your emotional timeline with trends</p>
                 </div>
               </div>
               {loading ? (
@@ -303,9 +346,176 @@ const DashboardPage = () => {
               ) : allMoods.length > 0 ? (
                 <MoodTrendChart entries={allMoods} />
               ) : (
-                <div className="empty-state">
-                  <FiActivity size={48} className="empty-icon" />
-                  <p className="body-md text-muted">No mood data available</p>
+                <div className="empty-state-modern">
+                  <div className="empty-icon">📈</div>
+                  <p>No trend data yet</p>
+                </div>
+              )}
+            </div>
+
+            {/* Three Column Layout */}
+            <div className="analytics-grid-3">
+              {/* Mood Frequency */}
+              <div className="glass-card-modern gradient-border-4">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper navy">
+                    <FiBarChart2 />
+                  </div>
+                  <div>
+                    <h3 className="heading-sm">Most Common</h3>
+                    <p className="body-sm text-muted">Top moods</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <MoodFrequencyChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern compact">
+                    <div className="empty-icon small">🎯</div>
+                    <p>No data</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Time Patterns */}
+              <div className="glass-card-modern gradient-border-1">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper lavender">
+                    <FiSun />
+                  </div>
+                  <div>
+                    <h3 className="heading-sm">Daily Patterns</h3>
+                    <p className="body-sm text-muted">Time analysis</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <TimeOfDayChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern compact">
+                    <div className="empty-icon small">🕐</div>
+                    <p>No data</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Mood Score Gauge */}
+              <div className="glass-card-modern gradient-border-2">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper sage">
+                    <FiActivity />
+                  </div>
+                  <div>
+                    <h3 className="heading-sm">Wellness Score</h3>
+                    <p className="body-sm text-muted">Overall health</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <MoodGaugeChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern compact">
+                    <div className="empty-icon small">⚡</div>
+                    <p>No score</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Two Column - Comparison Charts */}
+            <div className="analytics-grid-2">
+              {/* Scatter Plot */}
+              <div className="glass-card-modern gradient-border-3">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper peach">
+                    <FiBarChart2 />
+                  </div>
+                  <div>
+                    <h3 className="heading-md">Mood Scatter Plot</h3>
+                    <p className="body-sm text-muted">Entry distribution over time</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <MoodScatterChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern">
+                    <div className="empty-icon">💫</div>
+                    <p>No scatter data</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Composed Chart */}
+              <div className="glass-card-modern gradient-border-4">
+                <div className="card-modern-header">
+                  <div className="header-icon-wrapper navy">
+                    <FiTrendingUp />
+                  </div>
+                  <div>
+                    <h3 className="heading-md">Weekly Comparison</h3>
+                    <p className="body-sm text-muted">Multi-metric view</p>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : allMoods.length > 0 ? (
+                  <WeeklyComparisonChart entries={allMoods} />
+                ) : (
+                  <div className="empty-state-modern">
+                    <div className="empty-icon">📊</div>
+                    <p>No weekly data</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Heatmap - Full Width */}
+            <div className="glass-card-modern gradient-border-1">
+              <div className="card-modern-header">
+                <div className="header-icon-wrapper lavender">
+                  <FiCalendar />
+                </div>
+                <div>
+                  <h3 className="heading-md">Mood Calendar Heatmap</h3>
+                  <p className="body-sm text-muted">12-week visual patterns</p>
+                </div>
+              </div>
+              {loading ? (
+                <div className="loading-spinner"></div>
+              ) : allMoods.length > 0 ? (
+                <MoodHeatmap entries={allMoods} />
+              ) : (
+                <div className="empty-state-modern">
+                  <div className="empty-icon">🗓️</div>
+                  <p>Start tracking for calendar view</p>
+                </div>
+              )}
+            </div>
+
+            {/* Monthly Summary */}
+            <div className="glass-card-modern gradient-border-2">
+              <div className="card-modern-header">
+                <div className="header-icon-wrapper sage">
+                  <FiCalendar />
+                </div>
+                <div>
+                  <h3 className="heading-md">6-Month Trend Analysis</h3>
+                  <p className="body-sm text-muted">Long-term patterns with high/low markers</p>
+                </div>
+              </div>
+              {loading ? (
+                <div className="loading-spinner"></div>
+              ) : allMoods.length > 0 ? (
+                <MonthlySummaryChart entries={allMoods} />
+              ) : (
+                <div className="empty-state-modern">
+                  <div className="empty-icon">📅</div>
+                  <p>Track more for monthly insights</p>
                 </div>
               )}
             </div>
