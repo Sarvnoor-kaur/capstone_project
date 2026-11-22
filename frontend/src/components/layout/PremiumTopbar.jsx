@@ -9,10 +9,12 @@ import {
   LogOut,
   ChevronDown,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import "./PremiumTopbar.css";
 
-const PremiumTopbar = ({ toggleSidebar }) => {
+const PremiumTopbar = ({ toggleSidebar, sidebarOpen = true }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -33,12 +35,14 @@ const PremiumTopbar = ({ toggleSidebar }) => {
   return (
     <header className="premium-topbar">
       <div className="topbar-left">
+        {/* Sidebar Toggle - ALWAYS visible on desktop and mobile */}
         <button
-          className="mobile-menu-btn"
+          className="topbar-sidebar-toggle-btn"
           onClick={toggleSidebar}
-          aria-label="Toggle menu"
+          aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
-          <Menu size={24} />
+          {sidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
         </button>
 
         {/* Search Bar */}

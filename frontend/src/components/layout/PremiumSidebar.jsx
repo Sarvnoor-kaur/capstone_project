@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  ChevronLeft,
   Sparkles,
   Users,
   Wind,
@@ -59,26 +60,50 @@ const PremiumSidebar = ({ isOpen, toggleSidebar, userRole = "student" }) => {
 
       {/* Sidebar */}
       <aside className={`premium-sidebar ${isOpen ? "open" : "closed"}`}>
+        {/* Floating Rail Toggle Button (Always visible on the border) */}
+        <button
+          className="sidebar-rail-toggle"
+          onClick={toggleSidebar}
+          aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+          title={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+        >
+          {isOpen ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
+        </button>
+
         {/* Header with Branding */}
         <div className="premium-sidebar-header">
-          <div className="sidebar-brand">
-            <div className="brand-logo">
-              <Sparkles className="brand-icon" />
-            </div>
-            {isOpen && (
-              <div className="brand-text">
-                <h1 className="brand-name">Mentovya</h1>
-                <p className="brand-tagline">Your wellness journey</p>
+          {isOpen ? (
+            <>
+              <div className="sidebar-brand">
+                <div className="brand-logo">
+                  <Sparkles className="brand-icon" />
+                </div>
+                <div className="brand-text">
+                  <h1 className="brand-name">Mentovya</h1>
+                  <p className="brand-tagline">Your wellness journey</p>
+                </div>
               </div>
-            )}
-          </div>
-          <button
-            className="sidebar-toggle-btn"
-            onClick={toggleSidebar}
-            aria-label="Toggle sidebar"
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+              <button
+                className="sidebar-toggle-btn"
+                onClick={toggleSidebar}
+                aria-label="Collapse sidebar"
+                title="Collapse sidebar"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            </>
+          ) : (
+            <button
+              className="sidebar-expand-header-btn"
+              onClick={toggleSidebar}
+              aria-label="Expand sidebar"
+              title="Click to expand sidebar"
+            >
+              <div className="brand-logo mini">
+                <Sparkles className="brand-icon" />
+              </div>
+            </button>
+          )}
         </div>
 
         {/* Navigation */}

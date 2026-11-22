@@ -21,7 +21,7 @@ const PremiumLayout = ({ children }) => {
       />
 
       <div className={`premium-main ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
-        <PremiumTopbar toggleSidebar={toggleSidebar} />
+        <PremiumTopbar toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
 
         <main className="premium-content">
           {children}
