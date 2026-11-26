@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "../api/axiosClient";
-import { FiSend, FiTrash2, FiUser, FiCpu } from "react-icons/fi";
+import { FiSend, FiTrash2, FiUser, FiCpu, FiHeart, FiInfo } from "react-icons/fi";
 
 const AIChatPage = () => {
   const { user } = useAuth();
@@ -17,12 +18,16 @@ const AIChatPage = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const savedMessages = localStorage.getItem("aiChatMessages");
     if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
+      try {
+        setMessages(JSON.parse(savedMessages));
+      } catch {
+        setMessages([]);
+      }
     } else {
       setMessages([
         {
@@ -30,6 +35,7 @@ const AIChatPage = () => {
           content:
             "Hello! I'm here to support you with any mental health or emotional wellbeing concerns. Whether you're feeling stressed, anxious, overwhelmed, or just need someone to talk to, I'm here to listen and help. How are you feeling today?",
           timestamp: new Date().toISOString(),
+          safetyAssessment: null,
         },
       ]);
     }
@@ -46,9 +52,11 @@ const AIChatPage = () => {
 
     if (!inputMessage.trim() || isLoading) return;
 
+    const trimmedContent = inputMessage.trim();
+
     const userMessage = {
       role: "user",
-      content: inputMessage.trim(),
+      content: trimmedContent,
       timestamp: new Date().toISOString(),
     };
 
@@ -66,7 +74,8 @@ const AIChatPage = () => {
       const aiMessage = {
         role: "assistant",
         content: response.data.reply,
-        timestamp: response.data.timestamp,
+        timestamp: response.data.timestamp || new Date().toISOString(),
+        safetyAssessment: response.data.safetyAssessment || null,
       };
 
       setMessages((prev) => [...prev, aiMessage]);
@@ -74,11 +83,12 @@ const AIChatPage = () => {
       console.error("Failed to get AI response:", err);
       setError(
         err.response?.data?.message ||
-          "Failed to get response. Please try again."
+          "Unable to reach the support assistant right now. Please try again."
       );
 
+      // Preserve original student message in input box so it is not lost
+      setInputMessage(trimmedContent);
       setMessages((prev) => prev.slice(0, -1));
-      setInputMessage(userMessage.content);
     } finally {
       setIsLoading(false);
     }
@@ -93,6 +103,7 @@ const AIChatPage = () => {
           content:
             "Hello! I'm here to support you with any mental health or emotional wellbeing concerns. Whether you're feeling stressed, anxious, overwhelmed, or just need someone to talk to, I'm here to listen and help. How are you feeling today?",
           timestamp: new Date().toISOString(),
+          safetyAssessment: null,
         },
       ]);
     }
@@ -154,24 +165,76 @@ const AIChatPage = () => {
           <div className="ai-chat-container">
             <div className="messages-container">
               {messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`message ${
-                    msg.role === "user" ? "user-message" : "ai-message"
-                  }`}
-                >
-                  <div className="message-avatar">
-                    {msg.role === "user" ? <FiUser /> : <FiCpu />}
-                  </div>
-                  <div className="message-content">
-                    <div className="message-text">{msg.content}</div>
-                    <div className="message-timestamp">
-                      {new Date(msg.timestamp).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                <div key={index} className="message-wrapper">
+                  <div
+                    className={`message ${
+                      msg.role === "user" ? "user-message" : "ai-message"
+                    }`}
+                  >
+                    <div className="message-avatar">
+                      {msg.role === "user" ? <FiUser /> : <FiCpu />}
+                    </div>
+                    <div className="message-content">
+                      <div className="message-text">{msg.content}</div>
+                      <div className="message-timestamp">
+                        {new Date(msg.timestamp).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
                     </div>
                   </div>
+
+                  {/* Crisis support resource card displayed when risk signals are detected */}
+                  {msg.role === "assistant" &&
+                    msg.safetyAssessment?.riskDetected === true && (
+                      <div
+                        className="crisis-support-card"
+                        role="region"
+                        aria-label="Crisis Support Resources"
+                      >
+                        <div className="crisis-card-header">
+                          <FiHeart className="crisis-card-icon" />
+                          <span className="crisis-card-title">
+                            Support Resources Available
+                          </span>
+                        </div>
+                        <p className="crisis-card-text">
+                          We want to ensure you have compassionate, confidential support.
+                          If you or someone you know is feeling overwhelmed, experiencing thoughts
+                          of self-harm, or in distress, please know you are not alone and help is
+                          available 24/7.
+                        </p>
+                        <div className="crisis-resources-grid">
+                          <div className="crisis-resource-item">
+                            <strong>National 988 Suicide & Crisis Lifeline</strong>
+                            <span>Call or text <strong>988</strong> (Free, confidential, 24/7)</span>
+                          </div>
+                          <div className="crisis-resource-item">
+                            <strong>Crisis Text Line</strong>
+                            <span>Text <strong>HOME</strong> to <strong>741741</strong></span>
+                          </div>
+                        </div>
+                        <div className="crisis-card-actions">
+                          <Link to="/support" className="btn btn-primary btn-small">
+                            Connect with Campus Counselor
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+
+                  {/* Discreet notice when AI safety assessment was inconclusive or unavailable */}
+                  {msg.role === "assistant" &&
+                    msg.safetyAssessment &&
+                    msg.safetyAssessment.riskDetected === null && (
+                      <div className="safety-offline-notice">
+                        <FiInfo />
+                        <span>
+                          Safety screening was inconclusive or temporarily unavailable.
+                          Campus counseling and 24/7 crisis lines (988) are always accessible.
+                        </span>
+                      </div>
+                    )}
                 </div>
               ))}
 
@@ -222,6 +285,7 @@ const AIChatPage = () => {
                   type="submit"
                   disabled={!inputMessage.trim() || isLoading}
                   className="send-button"
+                  aria-label="Send message"
                 >
                   <FiSend />
                 </button>

@@ -1221,6 +1221,93 @@ body {
   font-size: 0.875rem;
 }
 
+/* NOPE Edge Crisis Support Card & Safety Notices */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.crisis-support-card {
+  margin-left: 3.25rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFF8F6 100%);
+  border: 1.5px solid #FED7D7;
+  border-left: 4px solid #E53E3E;
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 2px 8px rgba(229, 62, 62, 0.08);
+  animation: slideIn 0.3s ease-out;
+}
+
+.crisis-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #C53030;
+}
+
+.crisis-card-icon {
+  font-size: 1.25rem;
+  color: #E53E3E;
+}
+
+.crisis-card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.crisis-card-text {
+  font-size: 0.875rem;
+  color: #4A5568;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.crisis-resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.crisis-resource-item {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid #FED7D7;
+  font-size: 0.8rem;
+  color: #2D3748;
+}
+
+.crisis-resource-item strong {
+  color: #C53030;
+  margin-bottom: 0.15rem;
+}
+
+.crisis-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.safety-offline-notice {
+  margin-left: 3.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius-sm);
+  background: var(--gray-100);
+}
+
 /* ==================== */
 /* MOOD COMPONENTS      */
 /* ==================== */
